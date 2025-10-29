@@ -2223,7 +2223,7 @@ dependencies = [
  "anyhow",
  "cbindgen",
  "cdylib-link-lines",
- "dirs 5.0.1",
+ "dirs 6.0.0",
  "dlwrap",
  "libc",
  "log",
