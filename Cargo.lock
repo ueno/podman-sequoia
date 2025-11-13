@@ -2232,7 +2232,7 @@ dependencies = [
  "anyhow",
  "cbindgen",
  "cdylib-link-lines",
- "dirs 6.0.0",
+ "dirs 5.0.1",
  "dlwrap",
  "libc",
  "log",
@@ -2646,15 +2646,15 @@ dependencies = [
 
 [[package]]
 name = "sequoia-keystore"
-version = "0.7.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b510811048c0767a0d3196b3bb0719d999eb52a836580d794e97a2586b546347"
+checksum = "5d37ea65a9b421a49887afde9a6cd3d583d0ce4e5ae1f6d708330971f4eab365"
 dependencies = [
  "anyhow",
  "async-generic",
  "capnp",
  "capnpc",
- "dirs 5.0.1",
+ "dirs 6.0.0",
  "env_logger",
  "log",
  "paste",
