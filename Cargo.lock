@@ -2588,13 +2588,13 @@ checksum = "56e6fa9c48d24d85fb3de5ad847117517440f6beceb7798af16b4a87d616b8d0"
 
 [[package]]
 name = "sequoia-cert-store"
-version = "0.7.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc8987ed37e9931aee509c7ebc10e93b2ee5862849546c8a0c4588f3ed670b74"
+checksum = "0e9640848aee656020e6ff817ca23805bf42d116cb228ec50eacdd7ec93bf9f2"
 dependencies = [
  "anyhow",
  "crossbeam",
- "dirs 5.0.1",
+ "dirs 6.0.0",
  "gethostname",
  "num_cpus",
  "openpgp-cert-d",
