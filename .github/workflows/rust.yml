@@ -15,7 +15,7 @@ jobs:
     name: Static code checks
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: Check formatting
       run: cargo fmt --all -- --check
 
@@ -27,7 +27,7 @@ jobs:
     steps:
     - name: Install dependencies
       run: dnf install -y cargo rustfmt clang-devel llvm-devel openssl-devel gcc golang capnproto sqlite-devel git-core elfutils libabigail
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: Check out fedora/42/x86_64
