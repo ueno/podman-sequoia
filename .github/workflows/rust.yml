@@ -24,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: registry.fedoraproject.org/fedora:42
+    env:
+      SEQUOIA_CRYPTO_POLICY: "/dev/null"
     steps:
     - name: Install dependencies
       run: dnf install -y cargo rustfmt clang-devel llvm-devel openssl-devel gcc golang capnproto sqlite-devel git-core elfutils libabigail
@@ -41,6 +43,6 @@ jobs:
     - name: Check ABI compatibility
       run: abidb --loglevel debug --sysroot target/debug --check target/debug/libpodman_sequoia.so.0
     - name: Run Rust tests
-      run: SEQUOIA_CRYPTO_POLICY=/dev/null cargo test --verbose
+      run: cargo test --verbose
     - name: Run Go tests
       run: make -C go check
