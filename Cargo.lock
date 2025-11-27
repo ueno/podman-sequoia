@@ -922,9 +922,9 @@ dependencies = [
 
 [[package]]
 name = "dlwrap"
-version = "0.3.8"
+version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98b05d42090b0a96231ada2e4bde44edc3c98e1b78c2604570e0e9656fde54d2"
+checksum = "38c0171a5dd7dd42504211aa4500bf9fdcdd71a63bc51f25d8ddb9e68c73bfb7"
 dependencies = [
  "anyhow",
  "clang",
