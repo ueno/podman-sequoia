@@ -792,8 +792,7 @@ mod tests {
                 Some(LOCAL_PASSPHRASE),
                 b"contents",
             );
-            assert!(res.is_ok());
-            let signature = res.unwrap();
+            let signature = res.expect("signature should be returned");
             (cert, signature)
         });
         let fingerprint = cert.fingerprint();
@@ -805,13 +804,9 @@ mod tests {
                 .as_slice(),
         )
         .unwrap();
-        let res = mech.verify(&signature);
-        assert!(res.is_ok());
-        assert_eq!(res.as_ref().unwrap().content, b"contents");
-        assert_eq!(
-            res.as_ref().unwrap().signer,
-            CString::new(fingerprint.to_hex()).unwrap()
-        );
+        let res = mech.verify(&signature).expect("verify should succeed");
+        assert_eq!(res.content, b"contents");
+        assert_eq!(res.signer, CString::new(fingerprint.to_hex()).unwrap());
 
         // Invalid key handle format:
         with_fixture_sequoia_home_locked(|fixture_dir| {
@@ -1072,13 +1067,9 @@ mod tests {
                 .as_slice(),
         )
         .unwrap();
-        let res = mech.verify(&signature);
-        assert!(res.is_ok());
-        assert_eq!(res.as_ref().unwrap().content, plaintext);
-        assert_eq!(
-            res.as_ref().unwrap().signer,
-            CString::new(fingerprint.to_hex()).unwrap()
-        );
+        let res = mech.verify(&signature).expect("verify should succeed");
+        assert_eq!(res.content, plaintext);
+        assert_eq!(res.signer, CString::new(fingerprint.to_hex()).unwrap());
 
         // Invalid UTF-8 in key_handle:
         with_c_fixture_mechanism(|m| {
@@ -1150,18 +1141,18 @@ mod tests {
 
         // Empty input.
         let mut mech = SequoiaMechanism::ephemeral().unwrap();
-        let res = mech.import_keys(&[]);
-        assert!(res.is_ok());
-        assert!(res.unwrap().key_handles.is_empty());
+        let res = mech.import_keys(&[]).expect("import should succeed");
+        assert!(res.key_handles.is_empty());
 
         // A valid import of multiple keys.
         let pk1 = &TEST_KEY[..];
         let pk2 = &TEST_KEY_WITH_PASSPHRASE[..];
         let mut mech = SequoiaMechanism::ephemeral().unwrap();
-        let res = mech.import_keys(&[pk1, pk2].concat());
-        assert!(res.is_ok());
+        let res = mech
+            .import_keys(&[pk1, pk2].concat())
+            .expect("import should succeed");
         assert_eq!(
-            res.unwrap().key_handles,
+            res.key_handles,
             [
                 CString::new(TEST_KEY_FINGERPRINT).unwrap(),
                 CString::new(TEST_KEY_WITH_PASSPHRASE_FINGERPRINT).unwrap(),
@@ -1270,8 +1261,8 @@ mod tests {
             let mut m = SequoiaMechanism::from_directory(Some(fixture_dir.as_path())).unwrap();
             let large_contents: Vec<u8> = vec![0; 2 * openpgp::parse::stream::DEFAULT_BUFFER_SIZE];
             let large_signature = m.sign(TEST_KEY_FINGERPRINT, None, &large_contents).unwrap();
-            let res = m.verify(&large_signature);
-            assert_eq!(res.expect("verify should succeed").content, large_contents);
+            let res = m.verify(&large_signature).expect("verify should succeed");
+            assert_eq!(res.content, large_contents);
             large_signature
         });
         // Failure: (using a mechanism which doesn’t trust the key)
@@ -1346,11 +1337,12 @@ mod tests {
         let mut m = SequoiaMechanism::ephemeral().unwrap();
         m.import_keys(include_bytes!("./data/public-key.gpg"))
             .unwrap();
-        let res = m.verify(include_bytes!("./data/invalid-blob.signature"));
-        assert!(res.is_ok());
-        assert_eq!(res.as_ref().unwrap().content, b"This is not JSON\n");
+        let res = m
+            .verify(include_bytes!("./data/invalid-blob.signature"))
+            .expect("verify should succeed");
+        assert_eq!(res.content, b"This is not JSON\n");
         assert_eq!(
-            res.as_ref().unwrap().signer,
+            res.signer,
             CString::new("08CD26E446E2E95249B7A405E932F44B23E8DD43").unwrap()
         );
 
@@ -1381,8 +1373,8 @@ mod tests {
         let res = m.verify(double_signed_signature);
         assert!(res.is_err()); // "Multiple signature errors: [Missing key …, Missing key …]" by our Helper
         m.import_keys(TEST_KEY_WITH_PASSPHRASE).unwrap();
-        let res = m.verify(double_signed_signature);
-        assert!(res.is_ok());
+        m.verify(double_signed_signature)
+            .expect("verify should succeed");
     }
 
     #[test]
