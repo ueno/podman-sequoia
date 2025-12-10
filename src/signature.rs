@@ -292,7 +292,7 @@ impl<'a> VerificationHelper for Helper<'a> {
                                 return Ok(());
                             }
                             Err(verification_error) => {
-                                signature_errors.push(verification_error.to_string());
+                                signature_errors.push(pretty_error(verification_error));
                             }
                         }
                     }
@@ -303,11 +303,53 @@ impl<'a> VerificationHelper for Helper<'a> {
             0 => anyhow::anyhow!("No valid signature"),
             1 => anyhow::anyhow!("{}", &signature_errors[0]),
             _ => anyhow::anyhow!(
-                "Multiple signature errors: [{}]",
-                signature_errors.join(", ")
+                "Multiple signature errors:\n{}",
+                signature_errors.join("\n")
             ),
         };
         Err(err)
+    }
+}
+
+fn pretty_error_chain(err: &anyhow::Error) -> String {
+    let causes = err
+        .chain()
+        .skip(1)
+        .map(|cause| format!("because: {cause}"))
+        .collect::<Vec<_>>()
+        .join("\n");
+    format!("         {err}\n{causes}") // align err to "because: " length
+}
+
+fn pretty_error(verification_error: &VerificationError) -> String {
+    fn indent_error_chain(err: &anyhow::Error) -> String {
+        pretty_error_chain(err)
+            .lines()
+            .map(|line| format!("  {line}"))
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+    use openpgp::parse::stream::VerificationError::*;
+    match verification_error {
+        MissingKey { sig, .. } => format!("Missing key {:X}", sig.get_issuers().first().unwrap()),
+        UnboundKey { cert, error, .. } => format!(
+            "Signing key on {:X} is not bound:\n{}",
+            cert.fingerprint(),
+            indent_error_chain(error)
+        ),
+        BadKey { ka, error, .. } => format!(
+            "Signing key on {:X} is bad:\n{}",
+            ka.cert().fingerprint(),
+            indent_error_chain(error)
+        ),
+        BadSignature { error, .. } => format!("Bad signature:\n{}", indent_error_chain(error)),
+        MalformedSignature { error, .. } => {
+            format!("Signature is malformed:\n{}", indent_error_chain(error))
+        }
+        UnknownSignature { sig, .. } => {
+            format!("Unknown signature:\n{}", indent_error_chain(sig.error()))
+        }
+        _ => verification_error.to_string(),
     }
 }
 
