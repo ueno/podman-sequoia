@@ -28,7 +28,7 @@ sequoia-policy-config = "0.8"
 anyhow = "1"
 cbindgen = "0.24.0"
 cdylib-link-lines = "0.1.4"
-dlwrap = "0.3.8"
+dlwrap = { version = "0.3.9", features = ["clang-runtime"] }
 regex = "1"
 
 [features]
