@@ -1,8 +1,9 @@
 # podman-sequoia
 
-This directory contains the source code of a C shared library
-(`libpodman_sequoia.so`) that enables to use [sequoia-pgp] as a signing
-backend.
+podman-sequoia provides a C shared library (`libpodman_sequoia.so`)
+and [CGO](https://go.dev/wiki/cgo) stubs that enable to use
+[sequoia-pgp] as a signing backend in container tools such as podman
+or skopeo.
 
 For building, you need rustc (version 1.79 or later), cargo, and
 openssl-devel. For testing, you also need the `sq` command (version
