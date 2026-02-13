@@ -41,7 +41,9 @@ jobs:
     - name: Check that the working directory is clean
       run: test -z $(git status --porcelain --untracked-files=no) || exit 1
     - name: Check ABI compatibility
-      run: abidb --loglevel debug --sysroot target/debug --check target/debug/libpodman_sequoia.so.0
+      run: |
+        git worktree add abi fedora/42/x86_64
+        abidiff --verbose target/debug/libpodman_sequoia.so.0 abi/libpodman_sequoia.so.0/*.xml
     - name: Run Rust tests
       run: cargo test --verbose
     - name: Run Go tests
