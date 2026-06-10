@@ -18,11 +18,11 @@ anyhow = "1"
 dirs = "6"
 libc = "0.2"
 log = "0.4"
-sequoia-cert-store = { version = "0.8.0-pqc.1", default-features = false }
+sequoia-cert-store = { version = "=0.8.0-pqc.1", default-features = false }
 sequoia-directories = "0.1.0"
-sequoia-keystore = { version = "0.8.0-pqc.1", default-features = false, features = ["softkeys"] }
-sequoia-openpgp = { version = "2.2.0-pqc.1", default-features = false, features = ["compression"] }
-sequoia-policy-config = "0.9.0-pqc.1"
+sequoia-keystore = { version = "=0.8.0-pqc.1", default-features = false, features = ["softkeys"] }
+sequoia-openpgp = { version = "=2.2.0-pqc.1", default-features = false, features = ["compression"] }
+sequoia-policy-config = "=0.9.0-pqc.1"
 
 [build-dependencies]
 anyhow = "1"
