@@ -21,7 +21,7 @@ log = "0.4"
 sequoia-cert-store = { version = "0.7", default-features = false }
 sequoia-directories = "0.1.0"
 sequoia-keystore = { version = "0.7", default-features = false, features = ["softkeys"] }
-sequoia-openpgp = { version = "2", default-features = false, features = ["compression"] }
+sequoia-openpgp = { version = "2.4.1", default-features = false, features = ["compression"] }
 sequoia-policy-config = "0.8"
 
 [build-dependencies]
